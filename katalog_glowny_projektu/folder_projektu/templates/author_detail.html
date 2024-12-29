@@ -1,0 +1,14 @@
+<h1>{{ author.name }}</h1>
+<p>Nationality: {{ author.nationality }}</p>
+<p>Born on: {{ author.birth_date }}</p>
+
+<h2>Books by {{ author.name }}</h2>
+<ul>
+    {% for book in books %}
+        <li>
+            <a href="{% url 'book_detail' book.pk %}">{{ book.title }}</a> ({{ book.genre }})
+        </li>
+    {% empty %}
+        <p>No books available for this author.</p>
+    {% endfor %}
+</ul>

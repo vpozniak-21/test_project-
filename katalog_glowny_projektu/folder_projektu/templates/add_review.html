@@ -1,0 +1,9 @@
+<h2>Review: {{ book.title }}</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit Review</button>
+</form>
+
+<a href="{% url 'book_detail' book.id %}">Back to Book Details</a>

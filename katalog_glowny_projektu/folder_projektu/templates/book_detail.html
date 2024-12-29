@@ -1,0 +1,42 @@
+<!-- book_detail.html -->
+<h1>{{ book.title }}</h1>
+<p>Genre: {{ book.genre }}</p>
+<p>Release Date: {{ book.release_date }}</p>
+<p>Author: <a href="{% url 'author_detail' book.author.pk %}">{{ book.author.name }}</a></p>
+<a href="{% url 'add_review' book.id %}">Add Review</a>
+
+<h2>Reviews</h2>
+<!--
+{% if reviews_by_user %}
+    <ul>
+        {% for user, user_reviews in reviews_by_user.items %}
+            <li>
+                <strong>{{ user.username }}</strong> <!-- Assuming 'username' is used
+                <ul>
+                    {% for review in user_reviews %}
+                        <li>
+                            <strong>Rating:</strong> {{ review.rating }}/5
+                            <p><strong>Review:</strong> {{ review.content }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No reviews available for this book.</p>
+{% endif %}
+-->
+{% if reviews %}
+    <ul>
+        {% for review in reviews %}
+            <li>
+                <strong>{{ review.user.username }}</strong> <!-- Show the reviewer's username -->
+                <p><strong>Rating:</strong> {{ review.rating }}/5</p>
+                <p><strong>Review:</strong> {{ review.content }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No reviews available for this book.</p>
+{% endif %}
