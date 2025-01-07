@@ -1,8 +1,16 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
-from bookreview.models import Review
-from bookreview.forms import ReviewForm
+from bookreview.models import Review, Book, Author
+from bookreview.forms import ReviewForm, CustomUserCreationForm, ComprehensiveReviewForm
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
+from bookreview.forms import CustomUserCreationForm
+from django.contrib.auth import authenticate, login
+from django.db.models import Q
+
+
 
 class ReviewCreateView(LoginRequiredMixin, CreateView):
     model = Review
@@ -13,43 +21,23 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
-from django.shortcuts import render
-from .models import Book
 
 def book_list(request):
     books = Book.objects.all()
     return render(request, 'book_list.html', {'books': books})
 
-from django.shortcuts import render, get_object_or_404
-from .models import Book, Review
 
-def book_detail(request, pk):
-    book = get_object_or_404(Book, pk=pk)
-    reviews = Review.objects.filter(book=book)
-    return render(request, 'book_detail.html', {'book': book, 'reviews': reviews})
-
-
-from django.shortcuts import render
-from bookreview.models import Review
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def profile(request):
     reviews = Review.objects.filter(user=request.user)
     return render(request, 'profile.html', {'reviews': reviews})
 
-from django.shortcuts import redirect
-from django.contrib.auth import logout
 
 def custom_logout(request):
     logout(request)
     return redirect('login')
 
-from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 
 def index(request):
     if request.user.is_authenticated:
@@ -59,8 +47,6 @@ def index(request):
         # Unauthenticated users are redirected to the login page
         return redirect('login')
 
-from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm
 
 def register(request):
     if request.method == 'POST':
@@ -73,8 +59,7 @@ def register(request):
 
     return render(request, 'register.html', {'form': form})
 
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
+
 
 def custom_login(request):
     if request.method == 'POST':
@@ -98,21 +83,16 @@ def custom_login(request):
     return render(request, 'login.html')
 
 
-
-
-
-from django.shortcuts import render, get_object_or_404
-from .models import Book, Review
+def book_detail(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    reviews = Review.objects.filter(book=book)
+    return render(request, 'book_detail.html', {'book': book, 'reviews': reviews})
 
 def book_detail(request, pk):
     book = get_object_or_404(Book, pk=pk)
     reviews = Review.objects.filter(book=book)
     return render(request, 'book_detail.html', {'book': book, 'reviews': reviews})
 
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Book, Review
-from .forms import ReviewForm
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def add_review(request, book_id):
@@ -130,8 +110,6 @@ def add_review(request, book_id):
         form = ReviewForm()
     return render(request, 'add_review.html', {'form': form, 'book': book})
 
-from django.shortcuts import render, get_object_or_404
-from bookreview.models import Author, Book
 
 def author_detail(request, pk):
     author = get_object_or_404(Author, pk=pk)
@@ -139,8 +117,6 @@ def author_detail(request, pk):
     return render(request, 'author_detail.html', {'author': author, 'books': books})
 
 
-from .models import Book
-from django.db.models import Q
 
 def book_list(request):
     query = request.GET.get('q', '')  # Search query
@@ -149,3 +125,49 @@ def book_list(request):
     else:
         books = Book.objects.all()
     return render(request, 'book_list.html', {'books': books, 'query': query})
+
+
+@login_required
+def add_comprehensive_review(request):
+    if request.method == "POST":
+        form = ComprehensiveReviewForm(request.POST)
+        if form.is_valid():
+            # Handle existing book/author or new book/author
+
+            # For a new author
+            if form.cleaned_data["new_author_name"]:
+                author = Author.objects.create(
+                    name=form.cleaned_data["new_author_name"],
+                    nationality=form.cleaned_data["nationality"],
+                    birth_date=form.cleaned_data["birth_date"],
+                )
+            else:
+                author = form.cleaned_data["author"]  # Use selected author
+
+            # For a new book
+            if form.cleaned_data["new_book_title"]:
+                book = Book.objects.create(
+                    title=form.cleaned_data["new_book_title"],
+                    genre=form.cleaned_data["genre"],
+                    release_date=form.cleaned_data["release_date"],
+                    author=author,
+                )
+            else:
+                book = form.cleaned_data["book"]  # Use selected book
+
+            # Create the review
+            Review.objects.create(
+                book=book,
+                user=request.user,
+                rating=form.cleaned_data["rating"],
+                content=form.cleaned_data["content"],
+            )
+
+            return redirect("profile")  # Redirect to profile page after saving
+    else:
+        form = ComprehensiveReviewForm()
+
+    # Ensure the book is passed to the template
+    book = form.cleaned_data.get("book") if form.is_valid() else None
+
+    return render(request, "add_comprehensive_review.html", {"form": form, "book": book})

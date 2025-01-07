@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
 class Author(models.Model):
     name = models.CharField(max_length=100)
     birth_date = models.DateField()
@@ -27,15 +26,11 @@ class User(AbstractUser):
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
-
-
-    # Add required fields here
     USERNAME_FIELD = 'username'
-
     def __str__(self):
         return self.username
 
-from django.db import models
+
 from django.conf import settings
 from .models import Book
 from datetime import datetime
