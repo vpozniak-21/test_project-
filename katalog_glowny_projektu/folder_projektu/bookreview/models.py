@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 
 class Author(models.Model):
     name = models.CharField(max_length=100)
@@ -16,6 +18,12 @@ class Book(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     cover_image = models.ImageField(upload_to='book_covers/', null=True, blank=True)
 
+    def average_rating(self):
+        reviews = self.reviews.all()  # Assuming `related_name="reviews"` in Review
+        if reviews.exists():
+            return sum(review.rating for review in reviews) / reviews.count()
+        return None  # No reviews yet
+    
     def __str__(self):
         return self.title
 

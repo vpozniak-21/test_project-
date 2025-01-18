@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from bookreview.forms import CustomUserCreationForm
 from django.contrib.auth import authenticate, login
-from django.db.models import Q
+from django.db.models import Avg,Q
 
 
 
@@ -88,12 +88,12 @@ def book_detail(request, pk):
     reviews = Review.objects.filter(book=book)
     return render(request, 'book_detail.html', {'book': book, 'reviews': reviews})
 
-""" def book_detail(request, pk):
+def book_detail(request, pk):
     book = get_object_or_404(Book, pk=pk)
     reviews = Review.objects.filter(book=book)
     return render(request, 'book_detail.html', {'book': book, 'reviews': reviews})
 
- """
+
 @login_required
 def add_review(request, book_id):
     book = get_object_or_404(Book, id=book_id)
@@ -124,6 +124,9 @@ def book_list(request):
         books = Book.objects.filter(Q(title__icontains=query) | Q(author__name__icontains=query))
     else:
         books = Book.objects.all()
+
+    # Dodanie średniej oceny do każdego obiektu książki
+    books = books.annotate(avg_rating=Avg('reviews__rating'))
     return render(request, 'book_list.html', {'books': books, 'query': query})
 
 

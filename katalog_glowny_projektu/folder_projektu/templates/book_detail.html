@@ -25,6 +25,11 @@
         </div>
         <div class="offcanvas-body">
             <ul class="navbar-nav">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                </li>
+                
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'book_list' %}">Books List</a>
                 </li>
@@ -51,16 +56,31 @@
     <div class="container py-5">
         <h1 class="display-4 text-primary">{{ book.title }}</h1>
         <!-- Dodane zdjęcie książki -->
+<<<<<<< HEAD
         {% if book.cover_image %}
             <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="img-fluid rounded mb-4" style="max-width: 300px;">
+=======
+        {% if book.image_url %}
+            <img src="{{ book.image_url }}" alt="{{ book.title }}" class="img-fluid rounded mb-4" style="max-width: 300px;">
+>>>>>>> 2ec4f543d10bdd0a71f949df27a2629a5f73d05f
         {% else %}
             <p class="text-muted">No image available for this book.</p>
         {% endif %}
         <p><strong>Genre:</strong> {{ book.genre }}</p>
         <p><strong>Release Date:</strong> {{ book.release_date }}</p>
         <p><strong>Author:</strong> <a href="{% url 'author_detail' book.author.pk %}" class="text-decoration-none text-primary">{{ book.author.name }}</a></p>
+        
+        <!-- Średnia ocena książki -->
+        <p><strong>Average Rating:</strong> 
+            {% if avg_rating %}
+                {{ avg_rating|floatformat:1 }}/5
+            {% else %}
+                No ratings yet
+            {% endif %}
+        </p>
+    
         <a href="{% url 'add_review' book.id %}" class="btn btn-primary mt-3">Add Review</a>
-
+    
         <h2 class="mt-5">Reviews</h2>
         {% if reviews %}
             <ul class="list-unstyled">
@@ -76,7 +96,3 @@
             <p>No reviews available for this book.</p>
         {% endif %}
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
