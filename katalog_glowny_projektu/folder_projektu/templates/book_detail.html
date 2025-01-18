@@ -50,6 +50,12 @@
     <!-- Main Content -->
     <div class="container py-5">
         <h1 class="display-4 text-primary">{{ book.title }}</h1>
+         <!-- Dodane zdjęcie książki -->
+        {% if book.image_url %}
+            <img src="{{ book.image_url }}" alt="{{ book.title }}" class="img-fluid rounded mb-4" style="max-width: 300px;">
+        {% else %}
+            <p class="text-muted">No image available for this book.</p>
+        {% endif %}   
         <p><strong>Genre:</strong> {{ book.genre }}</p>
         <p><strong>Release Date:</strong> {{ book.release_date }}</p>
         <p><strong>Author:</strong> <a href="{% url 'author_detail' book.author.pk %}" class="text-decoration-none text-primary">{{ book.author.name }}</a></p>
