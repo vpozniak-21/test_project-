@@ -66,8 +66,18 @@
                         </div>
                         by <a href="{% url 'author_detail' book.author.pk %}" class="text-decoration-none">{{ book.author.name }}</a>
                     </div>
-                    <span class="badge bg-primary rounded-pill">{{ book.genre }}</span>
-                </li>
+                    <div class="text-end">
+                        <!-- Średnia ocena książki -->
+                        {% if book.avg_rating %}
+                            <span class="badge bg-success rounded-pill">
+                                {{ book.avg_rating|floatformat:1 }}/5
+                            </span>
+                        {% else %}
+                            <span class="badge bg-secondary rounded-pill">No ratings</span>
+                        {% endif %}
+                        <!-- Gatunek książki -->
+                        <span class="badge bg-primary rounded-pill">{{ book.genre }}</span>
+                    </div>                </li>
             {% endfor %}
         </ol>
     </div>
