@@ -52,14 +52,19 @@
         <div class="text-center mb-5">
             <h1 class="display-4 text-primary">Books List</h1>
         </div>
-        <ul class="list-group">
+        <ol class="list-group list-group-numbered">
             {% for book in books %}
-                <li class="list-group-item">
-                    <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">{{ book.title }}</a>
-                    by <a href="{% url 'author_detail' book.author.pk %}" class="text-decoration-none">{{ book.author.name }}</a>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">
+                            <a href="{% url 'book_detail' book.pk %}" class="text-decoration-none">{{ book.title }}</a>
+                        </div>
+                        by <a href="{% url 'author_detail' book.author.pk %}" class="text-decoration-none">{{ book.author.name }}</a>
+                    </div>
+                    <span class="badge bg-primary rounded-pill">{{ book.genre }}</span>
                 </li>
             {% endfor %}
-        </ul>
+        </ol>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
