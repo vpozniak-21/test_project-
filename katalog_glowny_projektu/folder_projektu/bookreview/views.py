@@ -88,12 +88,12 @@ def book_detail(request, pk):
     reviews = Review.objects.filter(book=book)
     return render(request, 'book_detail.html', {'book': book, 'reviews': reviews})
 
-def book_detail(request, pk):
+""" def book_detail(request, pk):
     book = get_object_or_404(Book, pk=pk)
     reviews = Review.objects.filter(book=book)
     return render(request, 'book_detail.html', {'book': book, 'reviews': reviews})
 
-
+ """
 @login_required
 def add_review(request, book_id):
     book = get_object_or_404(Book, id=book_id)
@@ -130,7 +130,7 @@ def book_list(request):
 @login_required
 def add_comprehensive_review(request):
     if request.method == "POST":
-        form = ComprehensiveReviewForm(request.POST)
+        form = ComprehensiveReviewForm(request.POST, request.FILES)
         if form.is_valid():
             # Handle existing book/author or new book/author
 
@@ -151,6 +151,7 @@ def add_comprehensive_review(request):
                     genre=form.cleaned_data["genre"],
                     release_date=form.cleaned_data["release_date"],
                     author=author,
+                    cover_image=form.cleaned_data["cover_image"],
                 )
             else:
                 book = form.cleaned_data["book"]  # Use selected book
@@ -162,6 +163,10 @@ def add_comprehensive_review(request):
                 rating=form.cleaned_data["rating"],
                 content=form.cleaned_data["content"],
             )
+            if form.cleaned_data['cover_image']:
+                book.cover_image = form.cleaned_data['cover_image']
+                book.save()
+
 
             return redirect("profile")  # Redirect to profile page after saving
     else:

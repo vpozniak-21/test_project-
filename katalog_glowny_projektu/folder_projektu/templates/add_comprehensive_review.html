@@ -52,7 +52,7 @@
     <div class="container py-5">
         <h2 class="display-4 text-primary">Add Review</h2>
 
-        <form method="POST" class="mt-4">
+        <form method="POST" enctype="multipart/form-data" class="mt-4">
             {% csrf_token %}
 
             <!-- Book Selection -->
@@ -105,6 +105,11 @@
             <div class="mb-3">
                 <label for="id_content" class="form-label">Review Content</label>
                 {{ form.content }}
+            </div>
+            
+            <div class="mb-3">
+                <label for="id_cover_image" class="form-label">Book Cover</label>
+                {{ form.cover_image }}
             </div>
 
             <!-- Submit Button -->

@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 from bookreview.views import book_list, book_detail, ReviewCreateView
 from django.contrib.auth import views as auth_views
@@ -19,3 +21,4 @@ urlpatterns = [
     path("add_comprehensive_review/", add_comprehensive_review, name="add_comprehensive_review"),
 
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

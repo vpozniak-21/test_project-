@@ -49,6 +49,9 @@ class ComprehensiveReviewForm(forms.Form):
     rating = forms.IntegerField(min_value=1, max_value=5, required=True)
     content = forms.CharField(widget=forms.Textarea, label="Review Content", required=True)
 
+    #Book cover image
+    cover_image = forms.ImageField(required=False)
+
     def clean(self):
         cleaned_data = super().clean()
 
