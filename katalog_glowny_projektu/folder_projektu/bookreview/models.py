@@ -17,13 +17,14 @@ class Book(models.Model):
     release_date = models.DateField()
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     cover_image = models.ImageField(upload_to='book_covers/', null=True, blank=True)
+    recommended = models.BooleanField(default=False)
 
     def average_rating(self):
         reviews = self.reviews.all()  # Assuming `related_name="reviews"` in Review
         if reviews.exists():
             return sum(review.rating for review in reviews) / reviews.count()
         return None  # No reviews yet
-    
+
     def __str__(self):
         return self.title
 

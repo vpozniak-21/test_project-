@@ -9,6 +9,7 @@ from django.contrib.auth import logout
 from bookreview.forms import CustomUserCreationForm
 from django.contrib.auth import authenticate, login
 from django.db.models import Avg,Q
+from django.db import models 
 
 
 
@@ -22,12 +23,24 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-def book_list(request):
-    books = Book.objects.all()
-    return render(request, 'book_list.html', {'books': books})
+def index(request):
+    if request.user.is_authenticated:
+        # Get the recommendations from your recommendations_view logic
+        recommended_books = recommendations_view(request)
+        return render(request, 'index.html', {'recommended_books': recommended_books})
+    else:
+        return redirect('login')
 
-
-
+def recommendations_view(request):
+    # Your existing recommendation logic
+    books = Book.objects.annotate(
+        review_count=models.Count('reviews'),
+        avg_rating=Avg('reviews__rating')
+    ).filter(
+        avg_rating__gte=4.8,
+        review_count__gte=10
+    ).order_by('?')[:5]
+    return books  # Return the queryset instead of rendering a template
 @login_required
 def profile(request):
     reviews = Review.objects.filter(user=request.user)
@@ -37,15 +50,6 @@ def profile(request):
 def custom_logout(request):
     logout(request)
     return redirect('login')
-
-
-def index(request):
-    if request.user.is_authenticated:
-        # Authenticated users are redirected to the main page (index.html)
-        return render(request, 'index.html')  # Render the main page for logged-in users
-    else:
-        # Unauthenticated users are redirected to the login page
-        return redirect('login')
 
 
 def register(request):
@@ -86,12 +90,9 @@ def custom_login(request):
 def book_detail(request, pk):
     book = get_object_or_404(Book, pk=pk)
     reviews = Review.objects.filter(book=book)
-    return render(request, 'book_detail.html', {'book': book, 'reviews': reviews})
 
-def book_detail(request, pk):
-    book = get_object_or_404(Book, pk=pk)
-    reviews = Review.objects.filter(book=book)
-    return render(request, 'book_detail.html', {'book': book, 'reviews': reviews})
+    avg_rating = reviews.aggregate(avg_rating=Avg('rating'))['avg_rating']
+    return render(request, 'book_detail.html', {'book': book, 'reviews': reviews, 'avg_rating':avg_rating})
 
 
 @login_required

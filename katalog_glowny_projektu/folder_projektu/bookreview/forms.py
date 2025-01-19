@@ -50,7 +50,7 @@ class ComprehensiveReviewForm(forms.Form):
     content = forms.CharField(widget=forms.Textarea, label="Review Content", required=True)
 
     #Book cover image
-    cover_image = forms.ImageField(required=False)
+    cover_image = forms.ImageField(required=True)
 
     def clean(self):
         cleaned_data = super().clean()

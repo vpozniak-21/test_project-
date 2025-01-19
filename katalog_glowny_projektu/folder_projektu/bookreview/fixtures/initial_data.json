@@ -15,7 +15,8 @@
             "title": "Harry Potter and the Philosopher's Stone",
             "genre": "Fantasy",
             "release_date": "1997-06-26",
-            "author": 1
+            "author": 1,
+            "cover_image": "book_covers/Philosopher_Stone.jpg"
         }
     },
     {
@@ -25,7 +26,8 @@
             "title": "Harry Potter and the Chamber of Secrets",
             "genre": "Fantasy",
             "release_date": "1998-07-02",
-            "author": 1
+            "author": 1,
+            "cover_image": "book_covers/Chamber_of_Secretes.jpg"
         }
     },
     {
@@ -44,7 +46,8 @@
             "title": "1984",
             "genre": "Dystopian",
             "release_date": "1949-06-08",
-            "author": 2
+            "author": 2,
+            "cover_image": "book_covers/1984.jpg"
         }
     },
     {
@@ -54,7 +57,8 @@
             "title": "Animal Farm",
             "genre": "Political satire",
             "release_date": "1945-08-17",
-            "author": 2
+            "author": 2,
+            "cover_image": "book_covers/Animal_Farm.jpg"
         }
     },
     {
@@ -73,7 +77,8 @@
             "title": "Pride and Prejudice",
             "genre": "Romance",
             "release_date": "1813-01-28",
-            "author": 3
+            "author": 3,
+            "cover_image": "book_covers/Pride_and_Prejudice.jpg"
         }
     },
     {
@@ -83,7 +88,8 @@
             "title": "Sense and Sensibility",
             "genre": "Romance",
             "release_date": "1811-10-30",
-            "author": 3
+            "author": 3,
+            "cover_image": "book_covers/Sense_and_Sensibility.jpg"
         }
     },
 	{
@@ -97,12 +103,13 @@
     },
     {
         "model": "bookreview.book",
-        "pk": 3,
+        "pk": 7,
         "fields": {
             "title": "War and Peace",
             "genre": "Historical Fiction",
             "release_date": "1869-01-01",
-            "author": 3
+            "author": 3,
+            "cover_image": "book_covers/War_and_Peace.jpg"
         }
     }
 ]
